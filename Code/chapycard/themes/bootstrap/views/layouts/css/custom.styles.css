@@ -1,0 +1,90 @@
+/* Nav */
+.navbar-inner{
+	/* background: #169FE6; */
+	background: #fff;
+	background-image: none;
+}
+
+.navbar .nav > li > a{
+	font-family: 'Trebuchet MS';
+	font-style: 17px;
+	text-transform: uppercase;
+	color: #169fe6;
+}
+
+.navbar .nav > li > a:hover{
+	background: #169FE6;
+	color: #fefefe;
+
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-ms-transition: all 0.3s;
+	-o-transition: all 0.3s;
+	transition: all 0.3s;
+}
+
+.navbar .nav > .active > a{
+	color: #fefefe;
+	background: #169FE6;
+	box-shadow: none;
+}
+
+.navbar .nav > .active > a:hover{
+	background: #169FE6;
+	color: #fefefe;
+	box-shadow: none;
+}
+
+.navbar-fixed-top{
+	height: 200px;
+	background: #169FE6;
+	position: relative;
+
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-ms-transition: all 0.3s;
+	transition: all 0.3s;
+}
+
+.navbar-fixed-top.sticky{
+	position: fixed;
+	top: 0;
+	height: 44px;
+}
+
+.navbar .brand{
+	position: absolute;	
+	top: 50px;
+	left: 50px;
+	width: 286px;
+	height: 132px;
+	display: block;
+	background: url(../images/logo.png) no-repeat;
+	text-indent: -10000px;
+
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-ms-transition: all 0.3s;
+	transition: all 0.3s;
+}
+
+.navbar-fixed-top.sticky .brand{
+	left: 450px;
+	top: 7px;
+	background-color: #169FE6;
+	width: 14px;
+	height: 6px;
+	background-size: contain;
+	border-radius: 45px;
+}
+
+.navbar-fixed-top .navbar-inner{
+	padding: 0;
+	border: 0;
+	box-shadow: none;
+}
+
+/* pages */
+#page{
+	padding-top: 20px;
+}

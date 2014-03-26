@@ -1,0 +1,48 @@
+#page {
+    padding-top: 230px;
+}
+#wrapper{
+	width: 100%;
+}
+#firstColumn{
+	float: left;
+	width: 30%
+}
+#secondColumn{
+	float: right;
+	width: 65%;
+	background: #d8d8d8;
+}
+iframe{
+	width: 100%;
+	height: 500px;
+}
+.chapy-control-group{
+	display: none;
+}
+.chapy-control-group.active{
+	display: block;
+}
+.chapy-control-group label{
+	float: left;
+	font-weight: bold;
+	line-height: 30px;
+	margin: 0;
+}
+.card-control{
+	clear: both;
+	float: left;
+	width: 250px;
+	margin-bottom: 10px;
+}
+.card-control > span{
+	float: right;
+}
+#border-controls .k-colorpicker{
+	margin-top: 5px;
+}
+#border-controls .border{
+	width: 66px;
+	margin-top: 5px;
+	margin-right: 5px;
+}

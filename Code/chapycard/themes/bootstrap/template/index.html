@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+			<meta charset="utf-8">
+			<meta http-equiv="X-UA-Compatible" content="IE=edge">
+			<title>Chapy Card design</title>
+			<link rel="stylesheet" href="css/main.css">
+			<script type="text/javascript" src="js/jquery-2.0.3.min.js"></script>			
+	</head>
+	<body>
+		<div id="container">
+			<nav class="btnGroup">
+				<button id="slider"></button>
+				<span class="btn">Front side</span>
+  				<span class="btn">Back side</span>  				
+			</nav>
+
+			<section class="chapycard frontside active" name="frontside">
+				font side
+			</section>
+
+			<section class="chapycard backside" name="backside">
+				back side
+			</section>
+		</div>
+
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$(".btn").click(function(){
+					$(".chapycard").toggleClass('active');
+					$("#slider").toggleClass('move');
+				});
+				if ($.isFunction(window.parent.chapyCardInit)) {
+	                window.parent.chapyCardInit();
+	            }
+			});
+		</script>
+	</body>
+</html>

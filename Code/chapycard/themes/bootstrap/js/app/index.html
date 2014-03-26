@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+	<html>
+	<head>
+			<meta charset="utf-8">
+			<meta http-equiv="X-UA-Compatible" content="IE=edge">
+			<title>Chapy Card</title>
+			<link rel="stylesheet" href="">
+			<script type="text/javascript" src="jquery-2.0.3.min.js"></script>
+			<script type="text/javascript" src="chapycard.js"></script>
+			<script type="text/javascript" src="tab.js"></script>
+			<script type="text/javascript" src="control.js"></script>
+			<script type="text/javascript" src="controls.js"></script>
+			<script type="text/javascript" src="width.js"></script>
+			<script type="text/javascript" src="stylesheet.js"></script>
+			<script type="text/javascript">				
+				var manifest = {
+					general:{
+						name: "general",
+						controls: {
+							width: {
+								name: "width",
+								selector: ".chapycard"
+							},
+							height: {
+								name: "height",
+								selector: ".chapycard"
+							}
+						}
+					},
+					design:{
+						name: "design",
+						controls:{
+							border:{
+								name: "border",
+								selector: ".chapycard"
+							}
+						}
+					}
+				};				
+			</script>
+	</head>
+	<body>
+	<div id="chapycontrol"></div>
+	<iframe id="framecard" ></iframe>	
+	</body>
+	<script type="text/javascript">
+		$(document).ready(function(){
+					var frame = $("#framecard");
+					var builder = new ChapyCard.Builder(frame, manifest);
+					console.log(builder.tabs)
+					$("#chapycontrol").append(builder.tabs.general.element);
+				});
+	</script>
+</html>

@@ -1,0 +1,24 @@
+JSONData = {
+	width: {
+		tab: 'general',
+		width: '330'
+	},
+
+	height: {
+		tab: 'general',
+		height: '220'
+	},
+	corner: {
+		tab: 'general',
+		corner: '2'
+	},
+	borderColor:{
+		tab: 'general',
+		borderColor:'#ff0000'
+	},
+	borderWidth:{
+		tab: 'general',
+		borderWidth: '1'
+	}
+
+}
