@@ -1,5 +1,5 @@
 /*
-  chapycard 0.0.1 2014-01-26
+  chapycard 0.0.1 2014-05-03
   Copyright (c) 2014 
 
   Released under  License
@@ -216,10 +216,10 @@
 		* @param string value  		value of property
 		* @return void
 		**/
-		updateCss: function(property, value){
+		updateCss: function(property, value, knownSelector){
 			var self = this;
 
-			self.card.stylesheet.addRule(self.getSelector(), property, value);			
+			self.card.stylesheet.addRule(self.getSelector(knownSelector), property, value);			
 			self.card.syncStyle();
 
 		},
@@ -231,15 +231,20 @@
 		*
 		* @return string
 		**/
-		getSelector: function(){
+		getSelector: function(knownSelector){
 			var self = this;
 
 			if(!self.distinct){
 				return self.selector;
 			}
 				
-
-			return self.card.getSelector() + self.selector;
+			if(knownSelector){
+				return "." + knownSelector + self.selector;
+			}else if(self.card.getSelector()){
+				return self.card.getSelector() + self.selector;
+			}else{
+				return self.selector;
+			}			
 		}
 	};
 /**
@@ -276,164 +281,6 @@
 			return self.controls[name];
 		}
 	};
-ChapyCard.Controls.add("corner", {
-    /**
-     * Initializes the control by adding the following instance variables:
-     *
-     * this.element // jQuery object for the entire control
-     * this.fields   // hash of jQuery objects for all form fields in the control
-     *
-     * @return  void
-     */
-	init: function(){
-		var self =  this;
-
-		//self.distinct = true;
-		self.element = $("<div id='border-controls' class='card-control'><label for='slider'>Corner: </label> <input id='slider' /><input id='picker' /> <input id='border' /></div>");
-		self.fields = {
-			corner: self.element.find("#slider"),
-			borderColor: self.element.find("#picker"),
-			border: self.element.find("#border")
-		};
-		self.fields.corner.kendoNumericTextBox({
-		     value: 0,
-		     min: 0,
-		     max: 100,
-		     step: 1,
-		     format: "n",
-		     decimals: 0,
-		     spin: $.proxy(self.cornerChange, this),
-		     change: $.proxy(self.cornerChange, this)
-		 });
-		self.fields.borderColor.kendoColorPicker({
-            value: "#ffffff",
-            buttons: false,
-            select: $.proxy(self.borderColorChange, this)
-        });
-
-        self.fields.border.kendoNumericTextBox({
-		     value: 0,
-		     min: 0,
-		     max: 100,
-		     step: 1,
-		     format: "n",
-		     decimals: 0,		    	     
-		     spin: $.proxy(self.borderChange, this),
-		     change: $.proxy(self.borderChange, this)
-		 });
-		
-		self.kendoFields = {
-			corner: self.fields.corner.data('kendoNumericTextBox'),
-			borderColor: self.fields.borderColor.data('kendoColorPicker'),
-			border: self.fields.border.data('kendoNumericTextBox')
-		};
-		self.kendoFields.border.wrapper.addClass('border');
-		self.refresh();
-	},
-	/**
-	* refresh control by default/saved setting
-	*
-	* @return void
-	**/
-	refresh: function(){
-		var self = this;
-		var corner = ChapyCard.Util.getJSONData("corner", "corner"),
-			borderColor = ChapyCard.Util.getJSONData('borderColor', 'borderColor'),
-			borderWidth = ChapyCard.Util.getJSONData('borderWidth', 'borderWidth');
-		if(corner){
-			self.kendoFields.corner.value(corner);
-			self.cornerChange();
-		}
-		if(borderColor){
-			self.kendoFields.borderColor.value(borderColor);
-			self.borderColorChange();
-		}
-		if(borderWidth){
-			self.kendoFields.border.value(borderWidth);
-			self.borderChange();
-		}
-			
-	},
-	/**
-	* event triggered when changing corner value
-	*
-	* @return void
-	**/
-	cornerChange: function(event){
-		this.updateCss("border-radius",this.fields.corner.val() + "px");
-	},
-
-	/**
-	* event triggered when changing border color value
-	*
-	* return void
-	**/
-	borderColorChange: function(event){
-		alert(this.fields.borderColor.val());
-		this.updateCss("border-color", this.fields.borderColor.val());
-	},
-	/**
-	* event triggered when changing border value
-	*
-	* @return void
-	**/
-	borderChange: function(event){
-		this.updateCss("border-width",this.fields.border.val() + "px");
-		this.updateCss("border-style", "solid");
-	}
-});
-ChapyCard.Controls.add("height", {
-    /**
-     * Initializes the control by adding the following instance variables:
-     *
-     * this.element // jQuery object for the entire control
-     * this.fields   // hash of jQuery objects for all form fields in the control
-     *
-     * @return  void
-     */
-	init: function(){
-		var self =  this;
-
-		self.element = $("<div id='height' class='card-control'><label for='slider'>Height: </label> <input id='slider' /></div>");
-		self.fields = {
-			height: self.element.find("#slider")
-		};
-		self.fields.height.kendoNumericTextBox({
-		     value: 216,
-		     min: 100,
-		     max: 700,
-		     step: 1,
-		     format: "n",
-		     decimals: 0,
-		     spin: $.proxy(self.changeSize, this),
-		     change: $.proxy(self.changeSize, this)
-		 });
-
-		self.kendoFields = {
-			height: self.fields.height.data('kendoNumericTextBox')
-		};
-		
-		self.refresh();
-	},
-	/**
-	* refresh control by default/saved setting
-	*
-	* @return void
-	**/
-	refresh: function(){
-		var self = this;
-		var height = ChapyCard.Util.getJSONData("height", "height");
-		if(height){
-			self.kendoFields.height.value(height);
-			self.changeSize();
-		}
-			
-	},
-
-	changeSize: function(event){
-		this.updateCss("height",this.fields.height.val() + "px");
-	}
-});
 /**
 * stylesheet representation
 * 
@@ -637,6 +484,7 @@ ChapyCard.Stylesheet.prototype = {
 
 			self.status = true;
 			self.controls.addClass('active');
+			self.element.addClass('active');
 		},
 		/**
 		* deactivate a tab
@@ -648,6 +496,7 @@ ChapyCard.Stylesheet.prototype = {
 
 			self.status = false;
 			self.controls.removeClass('active');
+			self.element.removeClass('active');
 		},
 		/**
 		* add control to tab
@@ -703,6 +552,335 @@ ChapyCard.Util = {
 			
 	}
 };
+ChapyCard.Controls.add("background", {
+    /**
+     * Initializes the control by adding the following instance variables:
+     *
+     * this.element // jQuery object for the entire control
+     * this.fields   // hash of jQuery objects for all form fields in the control
+     *
+     * @return  void
+     */
+	init: function(){
+		var self =  this;
+
+		self.distinct = true;
+		self.element = $("<div class='background-controls card-control'><label for='background'>Background: </label> <input id='background' /> <input name='files' id='files' type='file' /></div>");
+		self.fields = {			
+			bgColor: self.element.find("#background"),
+			bgImage: self.element.find("#files")		
+		};
+		
+		self.fields.bgColor.kendoColorPicker({
+            value: "#ffffff",
+            buttons: false,
+            select: $.proxy(self.bgColorChange, this)
+        });
+		self.fields.bgImage.kendoUpload();
+       	self.kendoFields = {			
+			bgColor: self.fields.bgColor.data('kendoColorPicker')			
+		};		
+		self.kendoFields.bgColor.wrapper.addClass('color');
+		//self.kendoFields.borderStyle.wrapper.addClass('border-style');
+		self.refresh();
+	},
+	/**
+	* refresh control by default/saved setting
+	*
+	* @return void
+	**/
+	refresh: function(){
+		var self = this;
+		var bgColor = ChapyCard.Util.getJSONData('background', 'backgroundColor');
+		
+		
+		if(bgColor){
+			self.kendoFields.bgColor.value(bgColor);
+			self.bgColorChange();
+			var frontside = ChapyCard.Util.getJSONData("background", "frontside"),
+				backside = ChapyCard.Util.getJSONData("background", "backside");
+			if(frontside){
+				self.bgColorChangeWithValue(frontside['backgroundColor'], "frontside");
+			}
+			if(backside){
+				self.bgColorChangeWithValue(backside['backgroundColor'], "backside")
+			}
+		}		
+			
+	},
+	
+	/**
+	* event triggered when changing border color value
+	*
+	* return void
+	**/
+	bgColorChange: function(event){		
+		this.updateCss("background-color", this.fields.bgColor.val());
+	},
+	/**
+	* event triggered when changing border style
+	* @param: value of changing
+	* @return void
+	**/
+	bgColorChangeWithValue: function(value, knownSelector){
+		this.updateCss("background-color",value, knownSelector);		
+	}
+});
+ChapyCard.Controls.add("border", {
+    /**
+     * Initializes the control by adding the following instance variables:
+     *
+     * this.element // jQuery object for the entire control
+     * this.fields   // hash of jQuery objects for all form fields in the control
+     *
+     * @return  void
+     */
+	init: function(){
+		var self =  this;
+
+		self.distinct = true;
+		self.element = $("<div id='border-controls' class='card-control'><label for='slider'>Border: </label> <input id='picker' /> <input id='border' /> <input id='style' /></div>");
+		self.fields = {			
+			borderColor: self.element.find("#picker"),
+			border: self.element.find("#border"),
+			borderStyle: self.element.find("#style")
+		};
+		
+		self.fields.borderColor.kendoColorPicker({
+            value: "#ffffff",
+            buttons: false,
+            select: $.proxy(self.borderColorChange, this)
+        });
+
+        self.fields.border.kendoNumericTextBox({
+		     value: 0,
+		     min: 0,
+		     max: 100,
+		     step: 1,
+		     format: "n",
+		     decimals: 0,		    	     
+		     spin: $.proxy(self.borderChange, this),
+		     change: $.proxy(self.borderChange, this)
+		 });
+
+		// create DropDownList from input HTML element
+		var styledata = [
+						{text: 'Solid', value: 'solid'},
+						{text: 'Dotted', value: 'dotted'},
+						{text: 'Dashed', value: 'dashed'},						
+						{text: 'None', value: 'none'}
+						];
+        self.fields.borderStyle.kendoDropDownList({
+            dataTextField: "text",
+            dataValueField: "value",
+            dataSource: styledata,
+            index: 0,
+            change: $.proxy(self.borderStyleChange, this)
+        });
+		self.kendoFields = {			
+			borderColor: self.fields.borderColor.data('kendoColorPicker'),
+			border: self.fields.border.data('kendoNumericTextBox'),
+			borderStyle: self.fields.borderStyle.data('kendoDropDownList')
+		};		
+		self.kendoFields.border.wrapper.addClass('border');
+		self.kendoFields.borderStyle.wrapper.addClass('border-style');
+		self.refresh();
+	},
+	/**
+	* refresh control by default/saved setting
+	*
+	* @return void
+	**/
+	refresh: function(){
+		var self = this;
+		var borderColor = ChapyCard.Util.getJSONData('borderColor', 'borderColor'),
+			borderWidth = ChapyCard.Util.getJSONData('borderWidth', 'borderWidth'),
+			borderStyle = ChapyCard.Util.getJSONData('borderStyle', 'borderStyle');
+		
+		if(borderColor){
+			self.kendoFields.borderColor.value(borderColor);
+			self.borderColorChange();
+		}
+		if(borderWidth){
+			self.kendoFields.border.value(borderWidth);
+			self.borderChange();
+			var frontside = ChapyCard.Util.getJSONData("borderWidth", "frontside"),
+				backside = ChapyCard.Util.getJSONData("borderWidth", "backside");
+			if(frontside){
+				self.borderChangeWithValue(frontside['borderWidth'], "frontside");
+			}
+			if(backside){
+				self.borderChangeWithValue(backside['borderWidth'], "backside")
+			}
+		}
+		if(borderStyle){
+			self.kendoFields.borderStyle.value(borderStyle);
+			self.borderChange();
+			var frontside = ChapyCard.Util.getJSONData("borderStyle", "frontside"),
+				backside = ChapyCard.Util.getJSONData("borderStyle", "backside");
+			if(frontside){
+				self.borderStyleChangeWithValue(frontside['borderStyle'], "frontside");
+			}
+			if(backside){
+				self.borderStyleChangeWithValue(backside['borderStyle'], "backside")
+			}
+		}
+			
+	},
+	
+	/**
+	* event triggered when changing border color value
+	*
+	* return void
+	**/
+	borderColorChange: function(event){		
+		this.updateCss("border-color", this.fields.borderColor.val());
+	},
+	/**
+	* event triggered when changing border value
+	*
+	* @return void
+	**/
+	borderChange: function(event){
+		this.updateCss("border-width",this.fields.border.val() + "px");
+		
+	},
+	/**
+	* event trigger when changing border value
+	* @param: value of changing
+	* @return void
+	**/
+	borderChangeWithValue: function(value, knownSelector){
+		this.updateCss("border-width",value + "px", knownSelector);		
+	},
+	/**
+	* event triggered when changing border style
+	*
+	* @return void
+	**/
+	borderStyleChange: function(event){		
+		this.updateCss("border-style", this.fields.borderStyle.val());
+	},
+	/**
+	* event triggered when changing border style
+	* @param: value of changing
+	* @return void
+	**/
+	borderStyleChangeWithValue: function(value, knownSelector){
+		this.updateCss("border-style",value, knownSelector);		
+	}
+});
+ChapyCard.Controls.add("corner", {
+    /**
+     * Initializes the control by adding the following instance variables:
+     *
+     * this.element // jQuery object for the entire control
+     * this.fields   // hash of jQuery objects for all form fields in the control
+     *
+     * @return  void
+     */
+	init: function(){
+		var self =  this;
+		
+		self.element = $("<div id='corner-controls' class='card-control'><label for='slider'>Corner: </label> <input id='slider' /></div>");
+		self.fields = {
+			corner: self.element.find("#slider")
+		};
+		self.fields.corner.kendoNumericTextBox({
+		     value: 0,
+		     min: 0,
+		     max: 100,
+		     step: 1,
+		     format: "n",
+		     decimals: 0,
+		     spin: $.proxy(self.cornerChange, this),
+		     change: $.proxy(self.cornerChange, this)
+		 });
+		
+		
+		self.kendoFields = {
+			corner: self.fields.corner.data('kendoNumericTextBox')			
+		};
+		
+		self.refresh();
+	},
+	/**
+	* refresh control by default/saved setting
+	*
+	* @return void
+	**/
+	refresh: function(){
+		var self = this;
+		var corner = ChapyCard.Util.getJSONData("corner", "corner");
+			
+		if(corner){
+			self.kendoFields.corner.value(corner);
+			self.cornerChange();
+		}		
+			
+	},
+	/**
+	* event triggered when changing corner value
+	*
+	* @return void
+	**/
+	cornerChange: function(event){
+		this.updateCss("border-radius",this.fields.corner.val() + "px");
+	}
+	
+});
+ChapyCard.Controls.add("height", {
+    /**
+     * Initializes the control by adding the following instance variables:
+     *
+     * this.element // jQuery object for the entire control
+     * this.fields   // hash of jQuery objects for all form fields in the control
+     *
+     * @return  void
+     */
+	init: function(){
+		var self =  this;
+
+		self.element = $("<div id='height' class='card-control'><label for='slider'>Height: </label> <input id='slider' /></div>");
+		self.fields = {
+			height: self.element.find("#slider")
+		};
+		self.fields.height.kendoNumericTextBox({
+		     value: 216,
+		     min: 100,
+		     max: 700,
+		     step: 1,
+		     format: "n",
+		     decimals: 0,
+		     spin: $.proxy(self.changeSize, this),
+		     change: $.proxy(self.changeSize, this)
+		 });
+
+		self.kendoFields = {
+			height: self.fields.height.data('kendoNumericTextBox')
+		};
+		
+		self.refresh();
+	},
+	/**
+	* refresh control by default/saved setting
+	*
+	* @return void
+	**/
+	refresh: function(){
+		var self = this;
+		var height = ChapyCard.Util.getJSONData("height", "height");
+		if(height){
+			self.kendoFields.height.value(height);
+			self.changeSize();
+		}
+			
+	},
+
+	changeSize: function(event){
+		this.updateCss("height",this.fields.height.val() + "px");
+	}
+});
 ChapyCard.Controls.add("width", {
     /**
      * Initializes the control by adding the following instance variables:

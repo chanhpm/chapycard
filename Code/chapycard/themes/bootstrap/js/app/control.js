@@ -68,10 +68,10 @@
 		* @param string value  		value of property
 		* @return void
 		**/
-		updateCss: function(property, value){
+		updateCss: function(property, value, knownSelector){
 			var self = this;
 
-			self.card.stylesheet.addRule(self.getSelector(), property, value);			
+			self.card.stylesheet.addRule(self.getSelector(knownSelector), property, value);			
 			self.card.syncStyle();
 
 		},
@@ -83,14 +83,19 @@
 		*
 		* @return string
 		**/
-		getSelector: function(){
+		getSelector: function(knownSelector){
 			var self = this;
 
 			if(!self.distinct){
 				return self.selector;
 			}
 				
-
-			return self.card.getSelector() + self.selector;
+			if(knownSelector){
+				return "." + knownSelector + self.selector;
+			}else if(self.card.getSelector()){
+				return self.card.getSelector() + self.selector;
+			}else{
+				return self.selector;
+			}			
 		}
 	};

@@ -73,6 +73,7 @@
 
 			self.status = true;
 			self.controls.addClass('active');
+			self.element.addClass('active');
 		},
 		/**
 		* deactivate a tab
@@ -84,6 +85,7 @@
 
 			self.status = false;
 			self.controls.removeClass('active');
+			self.element.removeClass('active');
 		},
 		/**
 		* add control to tab

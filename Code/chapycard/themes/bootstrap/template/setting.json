@@ -13,12 +13,38 @@ JSONData = {
 		corner: '2'
 	},
 	borderColor:{
-		tab: 'general',
+		tab: 'design',
 		borderColor:'#ff0000'
 	},
 	borderWidth:{
-		tab: 'general',
-		borderWidth: '1'
+		tab: 'design',
+		borderWidth: '1',
+		frontside: {			
+			borderWidth: '1'
+		},
+		backside: {			
+			borderWidth: '1'
+		}
+	},
+	borderStyle:{
+		tab: 'design',
+		borderStyle: 'none',
+		frontside: {			
+			borderStyle: 'none'
+		},
+		backside: {			
+			borderStyle: 'none'
+		}
+	},
+	background:{
+		tab: 'design',
+		backgroundColor: '#fff',
+		frontside:{
+			backgroundColor: "#fff"
+		},
+		backside:{
+			backgroundColor: "#fff"
+		}
 	}
 
 }

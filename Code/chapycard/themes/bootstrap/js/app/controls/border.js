@@ -11,11 +11,11 @@ ChapyCard.Controls.add("border", {
 		var self =  this;
 
 		self.distinct = true;
-		self.element = $("<div id='border-controls' class='card-control'><label for='slider'>Border: </label> <input id='picker' /> <input id='border' /></div>");
-		self.fields = {
-			
+		self.element = $("<div id='border-controls' class='card-control'><label for='slider'>Border: </label> <input id='picker' /> <input id='border' /> <input id='style' /></div>");
+		self.fields = {			
 			borderColor: self.element.find("#picker"),
-			border: self.element.find("#border")
+			border: self.element.find("#border"),
+			borderStyle: self.element.find("#style")
 		};
 		
 		self.fields.borderColor.kendoColorPicker({
@@ -34,11 +34,28 @@ ChapyCard.Controls.add("border", {
 		     spin: $.proxy(self.borderChange, this),
 		     change: $.proxy(self.borderChange, this)
 		 });
-		
+
+		// create DropDownList from input HTML element
+		var styledata = [
+						{text: 'Solid', value: 'solid'},
+						{text: 'Dotted', value: 'dotted'},
+						{text: 'Dashed', value: 'dashed'},						
+						{text: 'None', value: 'none'}
+						];
+        self.fields.borderStyle.kendoDropDownList({
+            dataTextField: "text",
+            dataValueField: "value",
+            dataSource: styledata,
+            index: 0,
+            change: $.proxy(self.borderStyleChange, this)
+        });
 		self.kendoFields = {			
 			borderColor: self.fields.borderColor.data('kendoColorPicker'),
-			border: self.fields.border.data('kendoNumericTextBox')
+			border: self.fields.border.data('kendoNumericTextBox'),
+			borderStyle: self.fields.borderStyle.data('kendoDropDownList')
 		};		
+		self.kendoFields.border.wrapper.addClass('border');
+		self.kendoFields.borderStyle.wrapper.addClass('border-style');
 		self.refresh();
 	},
 	/**
@@ -49,7 +66,8 @@ ChapyCard.Controls.add("border", {
 	refresh: function(){
 		var self = this;
 		var borderColor = ChapyCard.Util.getJSONData('borderColor', 'borderColor'),
-			borderWidth = ChapyCard.Util.getJSONData('borderWidth', 'borderWidth');
+			borderWidth = ChapyCard.Util.getJSONData('borderWidth', 'borderWidth'),
+			borderStyle = ChapyCard.Util.getJSONData('borderStyle', 'borderStyle');
 		
 		if(borderColor){
 			self.kendoFields.borderColor.value(borderColor);
@@ -66,7 +84,18 @@ ChapyCard.Controls.add("border", {
 			if(backside){
 				self.borderChangeWithValue(backside['borderWidth'], "backside")
 			}
-
+		}
+		if(borderStyle){
+			self.kendoFields.borderStyle.value(borderStyle);
+			self.borderChange();
+			var frontside = ChapyCard.Util.getJSONData("borderStyle", "frontside"),
+				backside = ChapyCard.Util.getJSONData("borderStyle", "backside");
+			if(frontside){
+				self.borderStyleChangeWithValue(frontside['borderStyle'], "frontside");
+			}
+			if(backside){
+				self.borderStyleChangeWithValue(backside['borderStyle'], "backside")
+			}
 		}
 			
 	},
@@ -86,7 +115,7 @@ ChapyCard.Controls.add("border", {
 	**/
 	borderChange: function(event){
 		this.updateCss("border-width",this.fields.border.val() + "px");
-		this.updateCss("border-style", "solid");
+		
 	},
 	/**
 	* event trigger when changing border value
@@ -94,7 +123,22 @@ ChapyCard.Controls.add("border", {
 	* @return void
 	**/
 	borderChangeWithValue: function(value, knownSelector){
-		this.updateCss("border-width",value + "px", knownSelector);
-		this.updateCss("border-style", "solid", knownSelector);
+		this.updateCss("border-width",value + "px", knownSelector);		
+	},
+	/**
+	* event triggered when changing border style
+	*
+	* @return void
+	**/
+	borderStyleChange: function(event){		
+		this.updateCss("border-style", this.fields.borderStyle.val());
+	},
+	/**
+	* event triggered when changing border style
+	* @param: value of changing
+	* @return void
+	**/
+	borderStyleChangeWithValue: function(value, knownSelector){
+		this.updateCss("border-style",value, knownSelector);		
 	}
 });

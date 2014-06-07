@@ -19,8 +19,13 @@ iframe{
 }
 .chapy-control-group{
 	display: none;
+	position: absolute;
+	top:30px;
+	padding: 10px;
+	border: 1px solid #ddd;
+	z-index: 0;
 }
-.chapy-control-group.active{
+.active .chapy-control-group{
 	display: block;
 }
 .chapy-control-group label{
@@ -38,11 +43,48 @@ iframe{
 .card-control > span{
 	float: right;
 }
-#border-controls .k-colorpicker{
-	margin-top: 5px;
+#chapycontrol{
+	position: relative;
+}
+.chapy-tab{
+	position: absolute;
+	z-index: 0;
+}
+
+.chapy-tab > span{
+	padding: 5px 10px;
+	display: inline-block;
+	text-transform: capitalize;
+	position: absolute;
+	z-index: 10;
+	border: 1px solid #ddd;
+	border-bottom: none;
+	border-radius: 7px 7px 0 0;
+	background: #ddd;
+	cursor: pointer;
+}
+.chapy-tab.active > span{
+	z-index: 5;
+	background: #fff;
+	cursor: default;
+}
+#design_tab > span{
+	margin-left: 76px
 }
 #border-controls .border{
-	width: 66px;
-	margin-top: 5px;
+	width: 125px;
 	margin-right: 5px;
+}
+#border-controls .border-style{
+	margin-top: 5px;
+	float: left;
+	margin-left: 63px;
+	width: 100px;
+}
+.background-controls .color{
+	float: left;
+	margin-left: 10px;
+}
+.background-controls .k-upload-button{
+	width: 100px
 }

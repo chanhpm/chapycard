@@ -41,6 +41,10 @@ $this->pageTitle=Yii::app()->name;
 							border:{
 								name: "border",
 								selector: ".chapycard"
+							},
+							background:{
+								name: "background",
+								selector: ".chapycard"
 							}
 						},
 						init: false
